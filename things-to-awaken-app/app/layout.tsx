@@ -9,7 +9,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Kirkekollekt - 2024",
+  title: "Things to awaken - 2024",
   description: "",
 };
 

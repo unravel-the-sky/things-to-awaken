@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import SigninButton from "../components/client/SigninButton";
 
 export const metadata: Metadata = {
-  title: "Kirkekollekt - Admin",
+  title: "Things to awaken - Admin",
   description: "",
 };
 
@@ -23,7 +23,7 @@ export default function AdminPageLayout({
       <div className="hidden border-r md:block">
         <div className="flex h-full max-h-screen flex-col">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] bg-muted/40 lg:px-6">
-            <span className="font-semibold">Kirkekollekt - Admin</span>
+            <span className="font-semibold">Admin page</span>
           </div>
           <div className="flex-1 bg-muted/40">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -72,7 +72,7 @@ export default function AdminPageLayout({
                   className="flex items-center gap-2 text-lg font-semibold"
                 >
                   <Package2 className="h-6 w-6" />
-                  <span className="sr-only">Kirkekollekt</span>
+                  <span className="sr-only">Admin</span>
                 </Link>
                 <Link
                   href="#"
