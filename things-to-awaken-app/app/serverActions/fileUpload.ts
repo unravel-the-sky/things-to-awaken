@@ -1,7 +1,6 @@
 'use server'
 
 import { OrganisationDto, SubmittedFormData } from "@/lib/types";
-import { addOrganisationToDb, updateOrganisationById } from "@/prisma/databaseActions";
 import { revalidatePath } from "next/cache";
 import { getAwsDownloadUrl, getFileUrl, uploadImage, uploadPdf } from "./awsFuncs";
 
@@ -62,11 +61,11 @@ export const submitForm = async (
       documentFileKey
     };
   
-    if (organisationId) {
-      await updateOrganisationById(organisationToCreate, organisationId)
-    } else {
-      await addOrganisationToDb(organisationToCreate);
-    }
+    // if (organisationId) {
+    //   await updateOrganisationById(organisationToCreate, organisationId)
+    // } else {
+    //   await addOrganisationToDb(organisationToCreate);
+    // }
   
     revalidatePath("/admin");
     revalidatePath('/')

@@ -4,7 +4,6 @@ import mailerSend from "@/lib/mailersend";
 import sgMail from "@/lib/sendgrid";
 import { EmailParams, Recipient, Sender } from "mailersend";
 import { DEFAULT_MAILSENDER_MAIL } from "../utils";
-import { createOrUpdateMailTemplate, getMailTemplateFromDb } from "@/prisma/databaseActions";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 
@@ -118,24 +117,24 @@ export const sendMailWithMailerSend = async (emails: string[], donator: string, 
   }
 }
 
-export const createMailTemplate = async(text: string) => {
-  const session = await getServerSession(authOptions)
+// export const createMailTemplate = async(text: string) => {
+//   const session = await getServerSession(authOptions)
 
-  try {
-    const res = await createOrUpdateMailTemplate(text, session?.user.email ?? '')
-    return {
-      success: true,
-      res
-    }
-  } catch(err){
-    return {
-      success: false,
-      message: err
-    }
-  }
-}
+//   try {
+//     const res = await createOrUpdateMailTemplate(text, session?.user.email ?? '')
+//     return {
+//       success: true,
+//       res
+//     }
+//   } catch(err){
+//     return {
+//       success: false,
+//       message: err
+//     }
+//   }
+// }
 
-export const getMailTemplate = async () => {
-  const res = await getMailTemplateFromDb();
-  return res;
-}
+// export const getMailTemplate = async () => {
+//   const res = await getMailTemplateFromDb();
+//   return res;
+// }
