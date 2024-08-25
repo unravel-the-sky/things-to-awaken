@@ -4,46 +4,28 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator class_validator {
+    provider = "prisma-class-validator-generator"
+}
+
 datasource db {
     provider  = "postgresql"
     url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
     directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model Organisation {
-    id              String   @id @default(cuid())
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
-    name            String
-    image           String
-    emails          String[]
-    links           String[]
-    documentFileKey String   @default("")
-    description     String?
+model Post {
+    id          String  @id @default(cuid())
+    url         String  @default("")
+    description String  @default("")
+    source      String  @default("")
+    isSent      Boolean @default(false)
 }
 
-model Donator {
-    id        String     @id @default(cuid())
-    name      String
-    email     String     @unique
-    donations Donation[]
-}
-
-model RegisteredDonation {
-    id           String     @id @default(cuid())
-    donatorName  String     @default("")
-    donatorEmail String     @default("")
-    donations    Donation[]
-}
-
-model Donation {
-    id                   String              @id @default(cuid())
-    organisationId       String
-    dates                DateTime[]
-    RegisteredDonation   RegisteredDonation? @relation(fields: [registeredDonationId], references: [id])
-    registeredDonationId String?
-    Donator              Donator?            @relation(fields: [donatorId], references: [id])
-    donatorId            String?
+model Subscriber {
+    id            String    @id @default(cuid())
+    email         String?   @unique
+    emailVerified DateTime? @map("email_verified")
 }
 
 model MailTemplate {
