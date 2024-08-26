@@ -23,6 +23,7 @@ const config = {
         'orgs-admin': 'repeat(auto-fit, minmax(200px, 1fr))'
       },
       colors: {
+        mainBgColor: '#e6e2d2',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

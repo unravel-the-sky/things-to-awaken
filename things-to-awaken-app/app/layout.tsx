@@ -5,13 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 import Providers from "./components/client/Providers";
 import "./globals.css";
+import { Cormorant } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Things to awaken - 2024",
+  title: "Things to awaken.",
   description: "",
 };
+
+const cormorant = Cormorant({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
@@ -20,9 +26,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={cormorant.className}>
         <Providers>
-          <main className="flex min-h-screen flex-col items-center justify-center h-full w-full">
+          <main className="flex min-h-screen flex-col items-center justify-center h-full w-full bg-mainBgColor">
             {children}
           </main>
         </Providers>
