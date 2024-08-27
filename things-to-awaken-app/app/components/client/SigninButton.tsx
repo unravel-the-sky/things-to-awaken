@@ -61,21 +61,13 @@ export default function SigninButton({
 
   if (status === "unauthenticated") {
     return (
-      <Button variant={"blue"} onClick={() => signIn()}>
+      <Button variant={"blue"} onClick={() => signIn("google")}>
         Log in
       </Button>
     );
   }
 
   console.log(pathname);
-
-  if (pathname === "/admin") {
-    return (
-      <Button variant={"blue"} onClick={() => signIn("google")}>
-        Logg på
-      </Button>
-    );
-  }
 
   return null;
 }
