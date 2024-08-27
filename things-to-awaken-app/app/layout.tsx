@@ -39,9 +39,10 @@ export default function RootLayout({
                 className="h-full object-cover"
               />
             </Link>
-            <h3 className="m-auto">
-              things to awaken - a very personal website
-            </h3>
+            <div className="m-auto flex flex-col gap-0">
+              <h3 className="m-auto">things to awaken</h3>
+              <h4 className="m-auto text-sm">a very personal website</h4>
+            </div>
           </nav>
           <main className="flex min-h-screen flex-col items-center justify-center h-full w-full">
             {children}
