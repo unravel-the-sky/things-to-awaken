@@ -29,8 +29,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${cormorant.className} bg-mainBgColor`}>
         <Providers>
-          <nav className="fixed top-0 left-0 h-20 bg-slate-100 bg-gradient-to-r from-mainBgColor to-slate-200 w-full">
-            <Link href={"/"}>
+          <nav className="fixed top-0 left-0 h-20 bg-slate-100 bg-gradient-to-r from-mainBgColor via-[#f0f0f0] to-mainBgColor w-full flex">
+            <Link href={"/"} className="absolute left-0">
               <Image
                 src={"/logo-2.webp"}
                 width={80}
@@ -39,6 +39,9 @@ export default function RootLayout({
                 className="h-full object-cover"
               />
             </Link>
+            <h3 className="m-auto">
+              things to awaken - a very personal website
+            </h3>
           </nav>
           <main className="flex min-h-screen flex-col items-center justify-center h-full w-full">
             {children}

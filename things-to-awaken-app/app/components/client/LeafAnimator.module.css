@@ -6,6 +6,7 @@
 .x {
     position: fixed;
     top: 0;
+    left: -6rem;
 }
 
 .y {
@@ -17,7 +18,9 @@
     mix-blend-mode: lighten;
     animation: move 20s infinite ease-in alternate;
     transform: rotateZ(80deg);
+    filter: hue-rotate(327deg)
 }
+
 
 @keyframes x {
     100% {
