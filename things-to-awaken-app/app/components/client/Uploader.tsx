@@ -131,7 +131,7 @@ export default function Uploader() {
       {isPending ? (
         <div>loading...</div>
       ) : (
-        <Tabs defaultValue="single" className="w-[500px]">
+        <Tabs defaultValue="single" className="max-w-[500px] md:w-[500px]">
           <TabsList className="grid w-full grid-cols-2 bg-mainBgColor">
             <TabsTrigger
               value="single"

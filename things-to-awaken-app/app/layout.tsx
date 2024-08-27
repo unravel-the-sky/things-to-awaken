@@ -6,6 +6,7 @@ import Link from "next/link";
 import Providers from "./components/client/Providers";
 import "./globals.css";
 import { Cormorant } from "next/font/google";
+import LeafAnimator from "./components/client/LeafAnimator";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,6 +43,7 @@ export default function RootLayout({
           <main className="flex min-h-screen flex-col items-center justify-center h-full w-full">
             {children}
           </main>
+          <LeafAnimator />
         </Providers>
         <Toaster />
       </body>
