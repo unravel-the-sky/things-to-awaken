@@ -1,10 +1,22 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast, useToast } from "@/components/ui/use-toast";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type ParsedObject = {
   description: string;
@@ -61,86 +73,142 @@ const parseText = (input: string): ParsedObject[] => {
   return parsedArray;
 };
 
+const uploadSchema = z.object({
+  url: z.string().url({ message: "not a url" }),
+  description: z.string(),
+  batch: z.string(),
+});
+
+const uploadSchemaLeft = z.object({
+  url: z.string().url({ message: "not a url" }),
+  description: z.string().min(2, { message: "come on write something" }),
+});
+
+const uploadSchemaRight = z.object({
+  batch: z.string().min(2, { message: "come on write something" }),
+});
+
 export default function Uploader() {
-  const [link, setLink] = useState("");
-  const [description, setDescription] = useState("");
   const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+  const [selectedType, setSelectedType] = useState<"single" | "multiple">(
+    "single"
+  );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const uploadForm = useForm<z.infer<typeof uploadSchema>>({
+    resolver: zodResolver(
+      selectedType === "single" ? uploadSchemaLeft : uploadSchemaRight
+    ),
+    defaultValues: {
+      description: "",
+      url: "",
+      batch: "",
+    },
+  });
 
-    console.log({ link, description });
+  const { control } = uploadForm;
 
-    const parsedObject = parseText(description);
-    console.log({ parsedObject });
+  const onSubmit = (values: z.infer<typeof uploadSchema>) => {
+    console.log({ values });
 
-    // try {
-    //   const response = await fetch("/api/upload-link", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ link, description }),
-    //   });
+    const { batch } = values;
+    if (batch) {
+      // this is the batch, so get the parsed version
+      const parsedText = parseText(batch);
+      console.log("here, i parsed it: ", parsedText);
 
-    //   if (response.ok) {
-    //     toast({
-    //       title: "Success",
-    //       description: "Link and description uploaded successfully!",
-    //     });
-    //     setLink("");
-    //     setDescription("");
-    //   } else {
-    //     throw new Error("Failed to upload");
-    //   }
-    // } catch (error) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Failed to upload link and description. Please try again.",
-    //     variant: "destructive",
-    //   });
-    // }
+      // send this to backend as batch
+      console.log("sending multiple entry batch to backend..");
+      return;
+    }
+    // this is vanlig post, send as url and description
+    console.log("sending single entry to backend..");
   };
 
   return (
     <div className="max-w-md mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-5">Upload Link and Description</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label
-            htmlFor="link"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Link
-          </label>
-          <Input
-            type="url"
-            id="link"
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            required
-            placeholder="https://example.com"
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Description
-          </label>
-          <Textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-            placeholder="Enter a description for the link"
-            className="mt-1"
-          />
-        </div>
-        <Button type="submit">Upload</Button>
-      </form>
+      <h1 className="text-2xl font-bold p-4">Upload link and description</h1>
+      {isPending ? (
+        <div>loading...</div>
+      ) : (
+        <Tabs defaultValue="single" className="w-[500px]">
+          <TabsList className="grid w-full grid-cols-2 bg-mainBgColor">
+            <TabsTrigger
+              value="single"
+              onClick={() => setSelectedType("single")}
+            >
+              Single entry
+            </TabsTrigger>
+            <TabsTrigger
+              value="multiple"
+              onClick={() => setSelectedType("multiple")}
+            >
+              Multiple entry
+            </TabsTrigger>
+          </TabsList>
+          <Form {...uploadForm}>
+            <form
+              onSubmit={uploadForm.handleSubmit(onSubmit)}
+              className="p-2 rounded-md"
+            >
+              <TabsContent value="single" className="min-h-[200px] space-y-4">
+                <FormField
+                  control={control}
+                  name="url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Url</FormLabel>
+                      <FormControl className="bg-white">
+                        <Input placeholder="Url here" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description for the url</FormLabel>
+                      <FormControl className="bg-white">
+                        <Input
+                          placeholder="Write what you found interesting in this one"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </TabsContent>
+              <TabsContent value="multiple" className="min-h-[200px]">
+                <FormField
+                  control={control}
+                  name="batch"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description for the batch</FormLabel>
+                      <FormControl className="bg-white">
+                        <Textarea
+                          placeholder="Paste all in this one"
+                          {...field}
+                          className="h-max"
+                          rows={6}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </TabsContent>
+              <Button type="submit" variant={"orange"}>
+                Upload
+              </Button>
+            </form>
+          </Form>
+        </Tabs>
+      )}
     </div>
   );
 }

@@ -18,12 +18,15 @@ const config = {
       },
     },
     extend: {
+      width: {
+        mainWidth: 'min(65ch, 100% - 4rem)',
+      },
       gridTemplateColumns: {
         'orgs-public': 'repeat(auto-fit, minmax(200px, 1fr))',
         'orgs-admin': 'repeat(auto-fit, minmax(200px, 1fr))'
       },
       colors: {
-        mainBgColor: '#e6e2d2',
+        mainBgColor: '#e1e3e0',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

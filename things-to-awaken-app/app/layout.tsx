@@ -26,9 +26,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cormorant.className}>
+      <body className={`${cormorant.className} bg-mainBgColor`}>
         <Providers>
-          <main className="flex min-h-screen flex-col items-center justify-center h-full w-full bg-mainBgColor">
+          <nav className="fixed top-0 left-0 h-20 bg-slate-100 bg-gradient-to-r from-mainBgColor to-slate-200 w-full">
+            <Link href={"/"}>
+              <Image
+                src={"/logo-2.webp"}
+                width={80}
+                height={80}
+                alt="logo"
+                className="h-full object-cover"
+              />
+            </Link>
+          </nav>
+          <main className="flex min-h-screen flex-col items-center justify-center h-full w-full">
             {children}
           </main>
         </Providers>

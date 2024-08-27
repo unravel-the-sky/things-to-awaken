@@ -1,6 +1,6 @@
 import { DonationDto, DonationLogDto, DonatorDto, OrganisationDto, RegisterOrganisationDto } from "@/lib/types";
 import prisma from "../lib/prisma";
-import { Post } from "./generated/models";
+import { Post } from "@prisma/client";
 
 export const testDb = async () => {
     const test: Post = {
@@ -12,7 +12,10 @@ export const testDb = async () => {
     }
     const res = await prisma.post.create({
         data: {
-
+            description: 'asdf',
+            isSent: false,
+            source: 'adf',
+            url: 'adf'
         }
     })
 }
