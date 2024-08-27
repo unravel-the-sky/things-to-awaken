@@ -117,7 +117,7 @@ export default function SendTestMail() {
                     )}
                   />
                 </div>
-                <Button type="submit" variant={"orange"}>
+                <Button type="submit" variant={"blue"}>
                   Send test mail
                 </Button>
               </form>

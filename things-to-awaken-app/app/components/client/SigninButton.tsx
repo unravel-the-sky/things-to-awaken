@@ -21,19 +21,17 @@ export default function SigninButton() {
     return (
       <div className="space-y-2 flex flex-col items-center justify-center">
         <div>loading user..</div>
-        {/* <Skeleton className="h-4" />
-        <Skeleton className="h-4" /> */}
       </div>
     );
   }
 
   if (session && session.user) {
-    return <div>oh hello again</div>;
+    return <div className="lowercase">it&rsquo;s you, {session.user.name}</div>;
   }
 
   if (status === "unauthenticated") {
     return (
-      <Button variant={"orange"} onClick={() => signIn()}>
+      <Button variant={"blue"} onClick={() => signIn()}>
         Log in
       </Button>
     );
@@ -68,7 +66,7 @@ export default function SigninButton() {
 
   if (pathname === "/admin") {
     return (
-      <Button variant={"orange"} onClick={() => signIn("google")}>
+      <Button variant={"blue"} onClick={() => signIn("google")}>
         Logg på
       </Button>
     );

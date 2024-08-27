@@ -202,7 +202,7 @@ export default function Uploader() {
                   )}
                 />
               </TabsContent>
-              <Button type="submit" variant={"orange"}>
+              <Button type="submit" variant={"blue"}>
                 Upload
               </Button>
             </form>
