@@ -20,9 +20,22 @@ export default function SigninButton() {
   if (status === "loading") {
     return (
       <div className="space-y-2 flex flex-col items-center justify-center">
-        <Skeleton className="h-4" />
-        <Skeleton className="h-4" />
+        <div>loading user..</div>
+        {/* <Skeleton className="h-4" />
+        <Skeleton className="h-4" /> */}
       </div>
+    );
+  }
+
+  if (session && session.user) {
+    return <div>oh hello again</div>;
+  }
+
+  if (status === "unauthenticated") {
+    return (
+      <Button variant={"orange"} onClick={() => signIn()}>
+        Log in
+      </Button>
     );
   }
 
@@ -44,8 +57,8 @@ export default function SigninButton() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel>Bruker</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => signOut()}>Logg ut</DropdownMenuItem>
+          <DropdownMenuLabel>User</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => signOut()}>Log in</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );
@@ -55,7 +68,7 @@ export default function SigninButton() {
 
   if (pathname === "/admin") {
     return (
-      <Button variant={"orange"} onClick={() => signIn()}>
+      <Button variant={"orange"} onClick={() => signIn("google")}>
         Logg på
       </Button>
     );
