@@ -112,6 +112,9 @@ export default function Uploader() {
     console.log({ values });
 
     const { batch } = values;
+
+    alert("not yet implemented. but thank you.");
+
     if (batch) {
       // this is the batch, so get the parsed version
       const parsedText = parseText(batch);
