@@ -11,13 +11,20 @@ export default function UploadButton() {
 
   if (status === "authenticated") {
     return (
-      <div className="grid grid-cols-2 divide-x-2 divide-blue-200">
+      <div className="grid grid-cols-3 divide-x-3 divide-blue-200">
         <Button
           variant="link"
           type="button"
           onClick={() => router.push("./upload")}
         >
           upload
+        </Button>
+        <Button
+          variant="link"
+          type="button"
+          onClick={() => router.push("./home")}
+        >
+          home
         </Button>
         <Button variant="link" type="button" onClick={() => signOut()}>
           sign out

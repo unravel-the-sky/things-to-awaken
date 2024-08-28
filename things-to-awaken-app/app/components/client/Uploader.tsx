@@ -17,13 +17,15 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { createPost } from "@/app/serverActions/posts";
+import { useRouter } from "next/navigation";
 
 type ParsedObject = {
   description: string;
   urls: { url: string; source: string }[];
 };
 
-const parseText = (input: string): ParsedObject[] => {
+const parseRawText = (input: string): ParsedObject[] => {
   const lines = input.split(/\r?\n/).filter((line) => line.trim() !== "");
 
   const parsedArray: ParsedObject[] = [];
@@ -37,7 +39,7 @@ const parseText = (input: string): ParsedObject[] => {
     if (trimmedLine.startsWith("http")) {
       // It's a URL
       let source = "";
-      if (trimmedLine.includes("youtube")) {
+      if (trimmedLine.includes("youtube") || trimmedLine.includes("youtu.be")) {
         source = "youtube";
       } else if (trimmedLine.includes("instagram")) {
         source = "instagram";
@@ -88,45 +90,96 @@ const uploadSchemaRight = z.object({
   batch: z.string().min(2, { message: "come on write something" }),
 });
 
+const defaultValues = {
+  description: "",
+  url: "",
+  batch: "",
+};
+
 export default function Uploader() {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
   const [selectedType, setSelectedType] = useState<"single" | "multiple">(
     "single"
   );
+  const [isDone, setIsDone] = useState(true);
 
   const uploadForm = useForm<z.infer<typeof uploadSchema>>({
     resolver: zodResolver(
       selectedType === "single" ? uploadSchemaLeft : uploadSchemaRight
     ),
-    defaultValues: {
-      description: "",
-      url: "",
-      batch: "",
-    },
+    defaultValues,
   });
 
-  const { control } = uploadForm;
+  const { control, reset } = uploadForm;
 
   const onSubmit = (values: z.infer<typeof uploadSchema>) => {
     console.log({ values });
 
-    const { batch } = values;
-
-    alert("not yet implemented. but thank you.");
+    const { batch, url, description } = values;
 
     if (batch) {
       // this is the batch, so get the parsed version
-      const parsedText = parseText(batch);
+      const parsedText = parseRawText(batch);
       console.log("here, i parsed it: ", parsedText);
 
       // send this to backend as batch
       console.log("sending multiple entry batch to backend..");
+      alert("this is out of scope for now");
       return;
     }
     // this is vanlig post, send as url and description
     console.log("sending single entry to backend..");
+    startTransition(async () => {
+      try {
+        const res = await createPost(url, description);
+        console.log("whao resposne: ", res);
+        toast({
+          title: "welldone",
+          description: "your post is uploaded, thank you.",
+        });
+      } catch (err) {
+        toast({
+          title: "oups",
+          description: `error happened: ${err}`,
+        });
+      } finally {
+        setIsDone(true);
+      }
+    });
   };
+
+  const handleReset = () => {
+    reset();
+    setIsDone(false);
+  };
+
+  if (isDone) {
+    return (
+      <div className="flex flex-col gap-4">
+        <span> your post is uploaded. thank you.</span>
+        <p>want to post something else?</p>
+        <div className="flex gap-2 w-full justify-center">
+          <Button
+            variant={"blue"}
+            className="flex-grow-[0.5]"
+            onClick={handleReset}
+          >
+            yes
+          </Button>
+          <Button
+            variant={"default"}
+            className="flex-grow-[0.5]"
+            onClick={() => router.push("./")}
+          >
+            no
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-md mx-auto mt-10">
