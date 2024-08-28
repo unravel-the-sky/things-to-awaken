@@ -47,12 +47,19 @@ export const createManyPosts = async(posts: Post[]) => {
     }
 }
 
-export const getAllPosts = async(userId: string) => {
+export const getAllPosts = async(): Promise<Post[] | undefined> => {
     console.log('called createPost')
-    try {
-        const res = await gellAllPostsForUserInDb(userId)
-        return res;
-    } catch (err) {
-        console.error('error: ', err)
+    console.log('called createPost')
+    const session = await getServerSession()
+    
+    if (session && session.user.email) {
+        try {
+            const user = await getUserByEmailInDb(session.user.email)
+            const res = await gellAllPostsForUserInDb(user?.id || '')
+            return res;
+        } 
+        catch (err) {
+            console.error('error: ', err)
+        }
     }
 }
