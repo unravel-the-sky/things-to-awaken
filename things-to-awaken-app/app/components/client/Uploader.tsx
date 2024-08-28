@@ -104,7 +104,7 @@ export default function Uploader() {
   const [selectedType, setSelectedType] = useState<"single" | "multiple">(
     "single"
   );
-  const [isDone, setIsDone] = useState(true);
+  const [isDone, setIsDone] = useState(false);
 
   const uploadForm = useForm<z.infer<typeof uploadSchema>>({
     resolver: zodResolver(

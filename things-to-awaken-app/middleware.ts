@@ -10,4 +10,4 @@ export default withAuth({
     }
 })
 
-export const config = { matcher: ['/admin:path*', '/admin/orgs', '/admin/logs', '/admin/template', '/profile']}
+export const config = { matcher: ['/admin:path*', '/profile', '/home', '/upload']}
