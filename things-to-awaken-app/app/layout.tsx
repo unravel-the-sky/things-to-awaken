@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${cormorant.className} bg-mainBgColor`}>
         <Providers>
-          <nav className="fixed top-0 left-0 h-20 bg-slate-100 bg-gradient-to-r from-mainBgColor via-[#f0f0f0] to-mainBgColor w-full flex">
+          <nav className="fixed z-10 top-0 left-0 h-20 bg-slate-100 bg-gradient-to-r from-mainBgColor via-[#f0f0f0] to-mainBgColor w-full flex">
             <Link href={"/"} className="absolute left-0">
               <Image
                 src={"/logo-2.webp"}
@@ -44,7 +44,7 @@ export default function RootLayout({
               <h4 className="m-auto text-sm">a very personal website</h4>
             </div>
           </nav>
-          <main className="flex min-h-screen flex-col items-center justify-center h-full w-full">
+          <main className="flex min-h-screen mt-20 flex-col items-center justify-center h-full w-full">
             {children}
           </main>
           <LeafAnimator />

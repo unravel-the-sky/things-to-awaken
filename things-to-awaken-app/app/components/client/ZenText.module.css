@@ -1,0 +1,13 @@
+.animatedText {
+    opacity: 0;
+    animation: fadeIn 3s alternate ease infinite;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }

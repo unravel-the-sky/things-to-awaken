@@ -1,6 +1,13 @@
-import { getServerSession } from "next-auth";
-import { getAllPosts } from "../serverActions/posts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card";
+import { Post } from "@prisma/client";
+import { InstagramLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import { getAllPosts } from "../serverActions/posts";
 
 export default async function HomePage() {
   const posts = await getAllPosts();
@@ -10,27 +17,9 @@ export default async function HomePage() {
       welcome home.
       {posts && posts.length > 0 ? (
         <div className="flex flex-col gap-4">
-          here is is some posts..
+          posts
           {posts.map((item, index) => (
-            <div
-              key={item.id}
-              className="flex flex-col gap-2 p-4 border border-blue-200 shadow-sm rounded-lg"
-            >
-              {item.source === "youtube" && (
-                <iframe
-                  src={`https://www.youtube.com/embed/${
-                    item.url.split("=")[1]
-                  }`}
-                  allowFullScreen
-                ></iframe>
-              )}
-              <span>{item.description}</span>
-              {item.source !== "youtube" && (
-                <Link href={item.url} target="_blank">
-                  link
-                </Link>
-              )}
-            </div>
+            <PostItem key={item.id} post={item} />
           ))}
         </div>
       ) : (
@@ -39,3 +28,37 @@ export default async function HomePage() {
     </div>
   );
 }
+
+const PostItem = ({ post }: { post: Post }) => {
+  return (
+    <>
+      <Card className="bg-mainBgColor">
+        <CardHeader>
+          <CardDescription>
+            {post.createdAt.toLocaleDateString("nb")}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-2">
+          {post.source === "youtube" ? (
+            <iframe
+              src={`https://www.youtube.com/embed/${post.url.split("=")[1]}`}
+              allowFullScreen
+            ></iframe>
+          ) : post.source === "instagram" ? (
+            <div>
+              <Link href={post.url} target="_blank">
+                <InstagramLogoIcon scale={2} className="w-6 h-6" />
+              </Link>
+            </div>
+          ) : (
+            <Link href={post.url} target="_blank">
+              link
+            </Link>
+          )}
+
+          <span>{post.description}</span>
+        </CardContent>
+      </Card>
+    </>
+  );
+};
