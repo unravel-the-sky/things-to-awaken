@@ -25,7 +25,7 @@ export default function ZenText() {
     const interval = setInterval(() => {
       const randomIndex = Math.round(Math.random() * 10);
       setText(texts[randomIndex]);
-    }, 3500);
+    }, 7500);
 
     () => {
       clearInterval(interval);
