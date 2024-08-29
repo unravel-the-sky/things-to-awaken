@@ -6,12 +6,12 @@ import { clearInterval } from "timers";
 
 const texts = [
   "thank you",
-  "you are another me",
-  "we are all one",
+  "breathe",
+  "definition of love",
   "you are love",
-  "you are peace",
+  "define your truth",
   "you are the ocean",
-  "let the truth shine",
+  "let your truth shine",
   "surrender to what it is",
   "you are nobody",
   "you are peace",
@@ -33,7 +33,7 @@ export default function ZenText() {
   }, []);
 
   return (
-    <div className="flex flex-wrap justify-center gap-2 p-2">
+    <div className="flex flex-wrap gap-2 w-[150%] ml-[-5rem]">
       {Array(arraySize)
         .fill(true)
         .map((item, index) => (
@@ -45,7 +45,6 @@ export default function ZenText() {
 
 const TextItem = ({ text }: { text: string }) => {
   const getRandomDelay = () => `${Math.random() * 5}s`;
-  //   const getRandomDelay = () => `1s`;
 
   return (
     <div

@@ -10,6 +10,7 @@ export default function LeafAnimator() {
         height={150}
         alt="leaf"
         className={style.y}
+        priority={false}
       />
     </div>
   );

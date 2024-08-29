@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import SigninButton from "./components/client/SigninButton";
-import UploadButton from "./components/client/UploadButton";
+import NavigationButton from "./components/client/NavigationButton";
 
 export default function Home() {
   return (
@@ -11,7 +11,7 @@ export default function Home() {
       <h3>hello, friend</h3>
 
       <SigninButton />
-      <UploadButton />
+      <NavigationButton />
     </div>
   );
 }
