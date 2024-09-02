@@ -19,8 +19,7 @@ import { z } from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createPost } from "@/app/serverActions/posts";
 import { useRouter } from "next/navigation";
-import Cursor from "@/app/utils/cursorHelper";
-import linkifyHtml from "linkify-html";
+import linkifyStr from "linkify-string";
 
 type ParsedObject = {
   description: string;
@@ -96,6 +95,53 @@ const defaultValues = {
   description: "",
   url: "",
   batch: "",
+};
+
+const convertUrlsToLinks = (text: string): string => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(urlRegex, (url) => {
+    return `<a href="${url}" style="text-decoration: underline; color: blue;" target="_blank" rel="noopener noreferrer">${url}</a>`;
+  });
+  // return text.replace(urlRegex, (url) => {
+  //   return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+  // });
+};
+
+const createRange = (node, targetPosition) => {
+  let range = document.createRange();
+  range.selectNode(node);
+  range.setStart(node, 0);
+
+  let pos = 0;
+  const stack = [node];
+  while (stack.length > 0) {
+    const current = stack.pop();
+
+    if (current.nodeType === Node.TEXT_NODE) {
+      const len = current.textContent.length;
+      if (pos + len >= targetPosition) {
+        range.setEnd(current, targetPosition - pos);
+        return range;
+      }
+      pos += len;
+    } else if (current.childNodes && current.childNodes.length > 0) {
+      for (let i = current.childNodes.length - 1; i >= 0; i--) {
+        stack.push(current.childNodes[i]);
+      }
+    }
+  }
+
+  // The target position is greater than the
+  // length of the contenteditable element.
+  range.setEnd(node, node.childNodes.length);
+  return range;
+};
+
+const setPosition = (targetPosition) => {
+  const range = createRange(contentEle, targetPosition);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
 };
 
 export default function Uploader() {
@@ -180,25 +226,98 @@ export default function Uploader() {
     };
   }, [contentEditableRef.current]);
 
+  const convertUrlsToLinks = () => {
+    const contentEditableDiv = contentEditableRef.current;
+    if (contentEditableDiv) {
+      // const range = saveSelection(); // Save the current cursor position
+      // const offset = range?.endOffset;
+
+      const selection = window.getSelection();
+      const range = selection?.getRangeAt(0);
+      const clonedRange = range?.cloneRange();
+      clonedRange?.selectNodeContents(contentEditableDiv);
+      clonedRange?.setEnd(range!.endContainer, range!.endOffset);
+
+      const cursorPosition = clonedRange?.toString().length;
+
+      const justText = stripHtml(contentEditableDiv.innerHTML);
+      const linkifiedVersion = linkifyStr(justText);
+      console.log({ linkifiedVersion });
+      // contentEditableDiv.innerHTML = linkifiedVersion;
+
+      // contentEditableDiv.innerHTML = contentEditableDiv.innerHTML.replace(
+      //   urlRegex,
+      //   (url) => {
+      //     return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+      //   }
+      // );
+
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      contentEditableDiv.innerHTML = contentEditableDiv.innerHTML.replace(
+        urlRegex,
+        (url) => {
+          return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+        }
+      );
+
+      if (clonedRange) restoreSelection(clonedRange);
+
+      // selection?.removeAllRanges();
+      // if (selection && clonedRange) selection?.addRange(clonedRange);
+
+      // const selection = window.getSelection();
+      // selection?.collapse(
+      //   contentEditableDiv.childNodes[contentEditableDiv.childNodes.length - 1],
+      //   offset
+      // );
+
+      // restoreSelection(range); // Restore the cursor position
+    }
+  };
+
+  // useEffect(() => {
+  //   if (contentEditableRef.current) {
+  //     // contentEditableRef.current.innerHTML = convertUrlsToLinks(htmlContent);
+  //     contentEditableRef.current.innerHTML = htmlContent;
+  //   }
+  // }, [htmlContent]);
+
   const stripHtml = (html: string): string => {
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = html;
     return tempDiv.innerText;
   };
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
 
-  const convertUrlsToLinks = () => {
-    const contentEditableDiv = contentEditableRef.current;
-    if (contentEditableDiv) {
-      const offset = Cursor.getCurrentCursorPosition(contentEditableDiv);
+  const handleInput = (event) => {
+    // console.log("event: ", event.target.innerHTML);
+    const justText = stripHtml(event.target.innerHTML);
 
-      const linkifiedVersion = linkifyHtml(contentEditableDiv.innerHTML, {});
+    // console.log({ justText });
 
-      contentEditableDiv.innerHTML = linkifiedVersion;
+    const testing1 = convertUrlsToLinks(event.target.innerHTML);
+    const testing2 = convertUrlsToLinks(justText);
 
-      Cursor.setCurrentCursorPosition(offset, contentEditableDiv);
-      contentEditableDiv.focus();
+    console.log({ testing2 });
+
+    const linkifiedVersion = linkifyStr(justText);
+    console.log({ linkifiedVersion });
+
+    if (contentEditableRef.current && event.nativeEvent.data === " ") {
+      var range = document.createRange();
+      range.selectNodeContents(contentEditableRef.current);
+      range.collapse(false);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      // contentEditableRef.current.innerHTML = testing2;
+      // setHtmlContent(testing2);
     }
+  };
+
+  const createMarkup = () => {
+    const textBatch = getValues().batch;
+    console.log("batch: ", textBatch);
+    return { __html: convertUrlsToLinks(textBatch) };
   };
 
   if (isDone) {

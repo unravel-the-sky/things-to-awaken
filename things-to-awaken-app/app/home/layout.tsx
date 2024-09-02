@@ -6,8 +6,8 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <div className="fixed flex gap-4 justify-center space-x-2 w-full ml-[-16px] py-2 h-[8] bg-mainBgColor">
+    <div className="mt-20 w-full px-4">
+      <div className="fixed flex gap-4 justify-center w-full py-2 bg-mainBgColor">
         <Link href="/upload">upload</Link>
         <Link href="/zen">zen</Link>
       </div>
