@@ -4,7 +4,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Infinity, NotebookPen } from "lucide-react";
+import { House, Infinity, NotebookPen } from "lucide-react";
 import Link from "next/link";
 
 export default function HomeLayout({
@@ -14,11 +14,20 @@ export default function HomeLayout({
 }) {
   return (
     <div className="my-24 w-full">
-      <div className="fixed flex bottom-0 gap-8 justify-center w-full py-4 bg-[#f3f3f3] z-10 shadow-inner">
+      <div className="fixed flex bottom-0 space-x-3 gap-8 justify-center w-full py-4 bg-[#f3f3f3] z-20 shadow-[0px_-4px_12px_0px_#00000024]">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              {" "}
+              <Link href="/home">
+                <House />
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>home</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
               <Link href="/home/zen">
                 <Infinity />
               </Link>
@@ -29,7 +38,6 @@ export default function HomeLayout({
           </Tooltip>
           <Tooltip>
             <TooltipTrigger>
-              {" "}
               <Link href="/home/upload" className="flex gap-4">
                 <NotebookPen />
               </Link>

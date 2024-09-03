@@ -69,6 +69,7 @@
     line-height: 1.6rem;
     width: 100%;
     text-transform: lowercase;
+    overflow-x: hidden;
   }
 }
 
