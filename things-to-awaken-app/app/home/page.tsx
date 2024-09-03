@@ -25,9 +25,7 @@ export default async function HomePage() {
         <div className="flex flex-col gap-4 items-center">
           {Object.entries(groupedPosts).map(([monthYear, posts]) => (
             <div key={monthYear} className="mb-8 flex flex-col gap-4">
-              <div className="sticky top-20 bg-mainBgColor z-10 py-2 px-4 shadow-sm rounded-xl backdrop-blur-md bg-mainBgColor/30">
-                <h2 className="text-xl font-semibold mb-2">{monthYear}</h2>
-              </div>
+              <MonthName monthYear={monthYear} />
               {posts.map((item, index) => (
                 <PostItem key={item.id} post={item} />
               ))}
@@ -35,8 +33,16 @@ export default async function HomePage() {
           ))}
         </div>
       ) : (
-        <div>no posts yet..</div>
+        <div className="self-center">nothing. no-thing.</div>
       )}
     </div>
   );
 }
+
+const MonthName = ({ monthYear }: { monthYear: string }) => {
+  return (
+    <div className="sticky top-20 bg-mainBgColor z-10 py-2 px-4 shadow-sm rounded-b-xl backdrop-blur-md bg-mainBgColor/30">
+      <h2 className="text-xl font-semibold mb-2">{monthYear}</h2>
+    </div>
+  );
+};
