@@ -40,7 +40,7 @@ export const gellAllPostsForUserInDb = async (userId: string) => {
                 userId
             },
             orderBy: {
-                createdAt: 'asc'
+                createdAt: 'desc'
             }
         })
         return res

@@ -1,5 +1,6 @@
 "use client";
 
+import { createPost } from "@/app/serverActions/posts";
 import Cursor from "@/app/utils/cursorHelper";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,17 +20,19 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-type ParsedObject = {
+export type ParsedPostObject = {
   description: string;
-  urls: { url: string; source: string }[];
+  url: string;
+  source: string;
 };
 
-const parseRawText = (input: string): ParsedObject[] => {
+const parseRawText = (input: string): ParsedPostObject[] => {
   const lines = input.split(/\r?\n/).filter((line) => line.trim() !== "");
 
-  const parsedArray: ParsedObject[] = [];
+  const parsedArray: ParsedPostObject[] = [];
   let currentDescription: string | null = null;
-  let currentUrls: { url: string; source: string }[] = [];
+  let currentUrl: string = "";
+  let currentSource: string = "";
 
   //batch.replace(test[0].href.replace('http','https'), '').trim()
 
@@ -48,20 +51,21 @@ const parseRawText = (input: string): ParsedObject[] => {
         source = "unknown";
       }
 
-      currentUrls.push({ url: trimmedLine, source });
+      currentUrl = trimmedLine;
+      currentSource = source;
     } else {
       // It's a description
       if (currentDescription) {
         // Push the previous description and URLs to the parsed array
         parsedArray.push({
           description: currentDescription,
-          urls: currentUrls,
+          url: currentUrl,
+          source: currentSource,
         });
       }
 
       // Start a new description
       currentDescription = trimmedLine;
-      currentUrls = [];
     }
   }
 
@@ -69,7 +73,8 @@ const parseRawText = (input: string): ParsedObject[] => {
   if (currentDescription) {
     parsedArray.push({
       description: currentDescription,
-      urls: currentUrls,
+      url: currentUrl,
+      source: currentSource,
     });
   }
 
@@ -113,28 +118,27 @@ export default function Uploader() {
 
       // send this to backend as batch
       console.log("sending multiple entry batch to backend..");
-      alert(`this is out of scope for now, data: ${batch}`);
+      startTransition(async () => {
+        try {
+          const promises = parsedText.map(async (postItem) => {
+            createPost(postItem);
+          });
+          await Promise.all(promises);
+          toast({
+            title: "welldone",
+            description: "your post is uploaded, thank you.",
+          });
+        } catch (err) {
+          toast({
+            title: "oups",
+            description: `error happened: ${err}`,
+          });
+        } finally {
+          setIsDone(true);
+        }
+      });
       return;
     }
-    // this is vanlig post, send as url and description
-    console.log("sending single entry to backend..");
-    // startTransition(async () => {
-    //   try {
-    //     const res = await createPost(url, description);
-    //     console.log("whao resposne: ", res);
-    //     toast({
-    //       title: "welldone",
-    //       description: "your post is uploaded, thank you.",
-    //     });
-    //   } catch (err) {
-    //     toast({
-    //       title: "oups",
-    //       description: `error happened: ${err}`,
-    //     });
-    //   } finally {
-    //     setIsDone(true);
-    //   }
-    // });
   };
 
   const handleReset = () => {
@@ -142,7 +146,6 @@ export default function Uploader() {
     setIsDone(false);
   };
 
-  const [htmlContent, setHtmlContent] = useState<string>("");
   const contentEditableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -151,14 +154,6 @@ export default function Uploader() {
         convertUrlsToLinks();
       }
     };
-
-    // document.addEventListener("copy", function (e) {
-    //   const text_only = document.getSelection().toString();
-    //   const clipdata = e.clipboardData || window.clipboardData;
-    //   clipdata.setData("text/plain", text_only);
-    //   clipdata.setData("text/html", text_only);
-    //   e.preventDefault();
-    // });
 
     const contentEditableDiv = contentEditableRef.current;
     if (contentEditableDiv) {

@@ -3,6 +3,7 @@
 import { createManyPostsInDb, createPostInDb, gellAllPostsForUserInDb, getUserByEmailInDb, PostDto } from "@/prisma/databaseActions"
 import { Post } from "@prisma/client"
 import { getServerSession } from "next-auth"
+import { ParsedPostObject } from "../components/client/Uploader"
 
 const createPostDtoFromInput = (url: string, description: string): PostDto => {
     let source = 'unknown'
@@ -19,12 +20,13 @@ const createPostDtoFromInput = (url: string, description: string): PostDto => {
     return post
 }
 
-export const createPost = async(url: string, description: string) => {
+export const createPost = async(parsedPost: ParsedPostObject) => {
     console.log('called createPost')
     const session = await getServerSession()
     
     if (session && session.user.email) {
         try {
+            const { url, description, source } = parsedPost
             const postDto = createPostDtoFromInput(url, description)
             const user = await getUserByEmailInDb(session.user.email)
             const res = await createPostInDb(postDto, user?.id || '')
@@ -37,14 +39,19 @@ export const createPost = async(url: string, description: string) => {
     throw new Error('user session is not registered, do nothing for now')
 }
 
-export const createManyPosts = async(posts: Post[]) => {
+export const createManyPosts = async(parsedPosts: ParsedPostObject[]) => {
     console.log('called createPost')
-    try {
-        const res = await createManyPostsInDb(posts)
-        return res;
-    } catch (err) {
-        console.error('error: ', err)
-    }
+    const session = await getServerSession()
+    
+    // if (session && session.user.email) {
+    //     try {
+    //         const user = await getUserByEmailInDb(session.user.email)
+    //         const res = await createManyPostsInDb(posts)
+    //         return res;
+    //     } catch (err) {
+    //         console.error('error: ', err)
+    //     }
+    // }
 }
 
 export const getAllPosts = async(): Promise<Post[] | undefined> => {
