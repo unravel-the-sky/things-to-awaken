@@ -17,7 +17,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import linkifyHtml from "linkify-html";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { FormEvent, useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -96,7 +96,7 @@ export default function Uploader() {
     defaultValues,
   });
 
-  const { control, reset, getValues } = uploadForm;
+  const { control, reset } = uploadForm;
 
   const onSubmit = (values: z.infer<typeof uploadSchema>) => {
     console.log({ values });
@@ -110,7 +110,7 @@ export default function Uploader() {
 
       // send this to backend as batch
       console.log("sending multiple entry batch to backend..");
-      alert("this is out of scope for now");
+      alert(`this is out of scope for now, data: ${batch}`);
       return;
     }
     // this is vanlig post, send as url and description
@@ -149,6 +149,14 @@ export default function Uploader() {
       }
     };
 
+    // document.addEventListener("copy", function (e) {
+    //   const text_only = document.getSelection().toString();
+    //   const clipdata = e.clipboardData || window.clipboardData;
+    //   clipdata.setData("text/plain", text_only);
+    //   clipdata.setData("text/html", text_only);
+    //   e.preventDefault();
+    // });
+
     const contentEditableDiv = contentEditableRef.current;
     if (contentEditableDiv) {
       contentEditableDiv.addEventListener("keyup", handleKeyUp);
@@ -159,7 +167,7 @@ export default function Uploader() {
         contentEditableDiv.removeEventListener("keyup", handleKeyUp);
       }
     };
-  }, [contentEditableRef.current]);
+  }, []);
 
   const stripHtml = (html: string): string => {
     const tempDiv = document.createElement("div");
@@ -213,7 +221,7 @@ export default function Uploader() {
       <Form {...uploadForm}>
         <form
           onSubmit={uploadForm.handleSubmit(onSubmit)}
-          className="rounded-md flex flex-col gap-4"
+          className="rounded-md flex flex-col gap-4 w-full"
         >
           {isPending ? (
             <div>loading...</div>
@@ -221,25 +229,31 @@ export default function Uploader() {
             <FormField
               control={control}
               name="batch"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl className="bg-white">
-                    <Textarea
-                      placeholder="what did you find out today.."
-                      {...field}
-                      className="h-max bg-white select-text rounded-md min-h-40 w-[450px] whitespace-pre-wrap p-4 shadow-md"
-                      rows={6}
-                    />
-                    {/* <div
-                      contentEditable="true"
-                      ref={contentEditableRef}
-                      data-placeholder={"what did you find out today.."}
-                      className="bg-white select-text rounded-md min-h-40 w-[450px] whitespace-pre-wrap p-4 shadow-md"
-                    /> */}
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                // function onInputChange(e: FormEvent<HTMLElement>) {
+                //   onChange((e.target as HTMLElement).innerHTML);
+                // }
+                return (
+                  <FormItem>
+                    <FormControl className="bg-white">
+                      <Textarea
+                        placeholder="what did you find out today.."
+                        {...field}
+                        className="h-max bg-white select-text rounded-md min-h-40 lg:w-[450px] whitespace-pre-wrap p-4 shadow-md"
+                        rows={6}
+                      />
+                      {/* <div
+                        contentEditable="true"
+                        ref={contentEditableRef}
+                        onInput={onInputChange}
+                        data-placeholder={"what did you find out today.."}
+                        className="bg-white select-text rounded-md min-h-40 w-[450px] whitespace-pre-wrap p-4 shadow-md"
+                      /> */}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
           )}
           <Button type="submit" variant={"blue"} className="w-fit">
