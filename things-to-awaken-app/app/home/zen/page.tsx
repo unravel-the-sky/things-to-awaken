@@ -1,4 +1,4 @@
-import ZenText from "../components/client/ZenText";
+import ZenText from "@/app/components/client/ZenText";
 
 export default function ZenRoomPage() {
   return (

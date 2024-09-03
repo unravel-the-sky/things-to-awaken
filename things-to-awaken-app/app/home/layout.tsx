@@ -8,8 +8,8 @@ export default function HomeLayout({
   return (
     <div className="mt-20 w-full px-4">
       <div className="fixed flex gap-4 justify-center w-full py-2 bg-mainBgColor">
-        <Link href="/upload">upload</Link>
-        <Link href="/zen">zen</Link>
+        <Link href="/home/upload">upload</Link>
+        <Link href="/home/zen">zen</Link>
       </div>
       <div className="my-12">{children}</div>
     </div>

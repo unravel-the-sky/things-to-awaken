@@ -68,9 +68,19 @@
     font-size: 1.25rem;
     line-height: 1.6rem;
     width: 100%;
+    text-transform: lowercase;
   }
 }
 
 a {
   @apply underline
+}
+
+[contenteditable] {
+  padding: 1rem; 
+}
+[data-placeholder]:empty:before {
+   content: attr(data-placeholder);
+   color: #888;
+   display: block; /* For Firefox */
 }
