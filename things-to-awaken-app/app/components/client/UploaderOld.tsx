@@ -132,25 +132,6 @@ export default function Uploader() {
       alert("this is out of scope for now");
       return;
     }
-    // this is vanlig post, send as url and description
-    console.log("sending single entry to backend..");
-    startTransition(async () => {
-      try {
-        const res = await createPost(url, description);
-        console.log("whao resposne: ", res);
-        toast({
-          title: "welldone",
-          description: "your post is uploaded, thank you.",
-        });
-      } catch (err) {
-        toast({
-          title: "oups",
-          description: `error happened: ${err}`,
-        });
-      } finally {
-        setIsDone(true);
-      }
-    });
   };
 
   const handleReset = () => {
