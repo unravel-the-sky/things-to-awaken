@@ -31,7 +31,7 @@ export default function RootLayout({
         className={`${cormorant.className} bg-mainBgColor min-h-screen flex flex-col justify-center`}
       >
         <Providers>
-          <nav className="fixed z-10 top-0 left-0 h-20 bg-slate-100 bg-gradient-to-r from-mainBgColor via-[#f0f0f0] to-mainBgColor w-full flex">
+          <nav className="fixed z-30 top-0 left-0 h-20 bg-slate-100 bg-gradient-to-r from-mainBgColor via-[#f0f0f0] to-mainBgColor w-full flex">
             <Link href={"/"} className="absolute left-0">
               <Image
                 src={"/logo-2.webp"}

@@ -91,9 +91,6 @@ export default function PostItem({ post }: { post: Post }) {
           )}
 
           <span>{post.description}</span>
-          {/* <CardFooter className="flex justify-center pb-0 w-full">
-              <Button variant="outline">reflect</Button>
-            </CardFooter> */}
           <CardFooter className="flex flex-col space-y-4 px-2 py-0 ">
             <div className="w-full space-y-4">
               {comments.map((c) => (

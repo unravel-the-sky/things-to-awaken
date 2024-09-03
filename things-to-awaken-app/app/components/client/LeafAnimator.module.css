@@ -1,6 +1,7 @@
 .leaf {
     position: fixed;
     top: 0;
+    z-index: 9999;
 }
 
 .x {
@@ -19,6 +20,7 @@
     animation: move 20s infinite ease-in normal;
     transform: rotateZ(80deg);
     filter: hue-rotate(327deg) drop-shadow(1px 2px 50px rgba(0, 0, 0, 0.525));
+    z-index: 9999;
 }
 
 
