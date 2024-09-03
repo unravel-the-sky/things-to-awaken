@@ -66,7 +66,7 @@ export default function PostItem({ post }: { post: Post }) {
 
   return (
     <>
-      <Card className="bg-[#f3f3f3] hover:bg-[#f7f7f7]">
+      <Card className="bg-[#f3f3f3] hover:bg-[#f7f7f7] md:max-w-[450px] w-full ">
         <CardHeader>
           <CardDescription>
             {post.createdAt.toLocaleDateString("nb")}

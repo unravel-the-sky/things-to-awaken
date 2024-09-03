@@ -1,6 +1,5 @@
 "use client";
 
-import { createPost } from "@/app/serverActions/posts";
 import Cursor from "@/app/utils/cursorHelper";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,16 +7,15 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import linkifyHtml from "linkify-html";
+import * as linkify from "linkifyjs";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -32,6 +30,8 @@ const parseRawText = (input: string): ParsedObject[] => {
   const parsedArray: ParsedObject[] = [];
   let currentDescription: string | null = null;
   let currentUrls: { url: string; source: string }[] = [];
+
+  //batch.replace(test[0].href.replace('http','https'), '').trim()
 
   for (const line of lines) {
     const trimmedLine = line.trim();
@@ -108,6 +108,9 @@ export default function Uploader() {
       const parsedText = parseRawText(batch);
       console.log("here, i parsed it: ", parsedText);
 
+      const test = linkify.find(batch);
+      console.log("linfiy result: ", test);
+
       // send this to backend as batch
       console.log("sending multiple entry batch to backend..");
       alert(`this is out of scope for now, data: ${batch}`);
@@ -160,6 +163,11 @@ export default function Uploader() {
     const contentEditableDiv = contentEditableRef.current;
     if (contentEditableDiv) {
       contentEditableDiv.addEventListener("keyup", handleKeyUp);
+      // contentEditableDiv.addEventListener("paste", (e) => {
+      //   e.preventDefault();
+      //   const text = e.clipboardData.getData("text/plain");
+      //   document.execCommand("insertHtml", false, text);
+      // });
     }
 
     return () => {
@@ -231,7 +239,7 @@ export default function Uploader() {
               name="batch"
               render={({ field }) => {
                 // function onInputChange(e: FormEvent<HTMLElement>) {
-                //   onChange((e.target as HTMLElement).innerHTML);
+                //   onChange((e.target as HTMLElement).textContent);
                 // }
                 return (
                   <FormItem>
